@@ -102,4 +102,9 @@ class Task extends Model
     {
         return $this->status === self::STATUS_COMPLETED;
     }
+
+    public function dependencies()
+    {
+        return $this->belongsToMany(Task::class, 'task_dependencies', 'task_id', 'dependency_id');
+    }
 }
