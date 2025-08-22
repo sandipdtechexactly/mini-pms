@@ -24,14 +24,14 @@
                                     <th>Status</th>
                                     <th>Priority</th>
                                     <th>Deadline</th>
-                                    <th>Actions</th>
+                                    
                                 </tr>
                             </thead>
                             <tbody>
                                 @forelse($tasks as $task)
                                     <tr>
                                         <td>{{ $task->title }}</td>
-                                        <td>{{ $task->project->title }}</td>
+                                        <td>{{ $task->project->name }}</td>
                                         <td>{{ $task->assignedTo->name }}</td>
                                         <td>
                                             <span class="badge bg-{{ $task->status === 'completed' ? 'success' : ($task->status === 'in_progress' ? 'primary' : 'warning') }}">
@@ -39,16 +39,12 @@
                                             </span>
                                         </td>
                                         <td>{{ ucfirst($task->priority) }}</td>
-                                        <td>{{ $task->deadline->format('M d, Y') }}</td>
-                                        <td>
-                                            <a href="{{ route('tasks.edit', $task) }}" class="btn btn-sm btn-primary">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                        </td>
+                                        <td>{{ optional($task->due_date)->format('M d, Y') }}</td>
+                                        
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="7" class="text-center">No tasks found.</td>
+                                        <td colspan="6" class="text-center">No tasks found.</td>
                                     </tr>
                                 @endforelse
                             </tbody>

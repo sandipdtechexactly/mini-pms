@@ -43,11 +43,14 @@ class ProjectController extends Controller
         $this->authorize('create', Project::class);
         
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
+            'code' => 'required|string|max:50|unique:projects,code',
             'description' => 'nullable|string',
             'status' => 'required|in:planning,in_progress,on_hold,completed,cancelled',
+            'priority' => 'required|in:low,medium,high,urgent',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after:start_date',
+            'budget' => 'nullable|numeric|min:0',
             'team_members' => 'sometimes|array',
             'team_members.*' => 'exists:users,id',
         ]);
@@ -82,7 +85,7 @@ class ProjectController extends Controller
         $this->authorize('view', $project);
         
         $project->load(['owner', 'teamMembers', 'tasks' => function($query) {
-            $query->with('assignedTo')->latest();
+            $query->with('assignee')->latest();
         }]);
         
         return view('projects.show', compact('project'));
@@ -109,11 +112,14 @@ class ProjectController extends Controller
         $this->authorize('update', $project);
         
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
+            'code' => 'required|string|max:50|unique:projects,code,' . $project->id,
             'description' => 'nullable|string',
             'status' => 'required|in:planning,in_progress,on_hold,completed,cancelled',
+            'priority' => 'required|in:low,medium,high,urgent',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after:start_date',
+            'budget' => 'nullable|numeric|min:0',
             'team_members' => 'sometimes|array',
             'team_members.*' => 'exists:users,id',
         ]);

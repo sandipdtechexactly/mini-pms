@@ -50,62 +50,49 @@ class User extends Authenticatable
         ];
     }
 
-    /**
-     * The roles that belong to the user.
-     */
-    public function roles(): BelongsToMany
-    {
-        return $this->belongsToMany(Role::class);
-    }
+    // Spatie\Permission's HasRoles trait provides role & permission relations and helpers.
 
     /**
-     * The permissions that belong to the user.
+     * Get all of the projects owned by the user.
      */
-    public function permissions(): BelongsToMany
-    {
-        return $this->belongsToMany(Permission::class)->withTimestamps();
-    }
-
-    /**
-     * Get all of the projects for the user.
-     */
-    public function projects(): HasMany
+    public function ownedProjects(): HasMany
     {
         return $this->hasMany(Project::class, 'owner_id');
     }
 
     /**
+     * Get all of the projects the user is a member of.
+     */
+    public function projects(): BelongsToMany
+    {
+        return $this->belongsToMany(Project::class, 'project_user')
+            ->withTimestamps()
+            ->withPivot('role');
+    }
+
+    /**
      * Get all of the assigned tasks for the user.
+     */
+    public function assignedTasks(): HasMany
+    {
+        return $this->hasMany(Task::class, 'assigned_to');
+    }
+
+    /**
+     * Get all of the tasks created by the user.
+     */
+    public function createdTasks(): HasMany
+    {
+        return $this->hasMany(Task::class, 'created_by');
+    }
+
+    /**
+     * Get all of the tasks for the user (assigned or created).
      */
     public function tasks(): HasMany
     {
         return $this->hasMany(Task::class, 'assigned_to');
     }
 
-    /**
-     * Check if the user has a specific role.
-     */
-    public function hasRole(string $role): bool
-    {
-        return $this->roles()->where('name', $role)->exists();
-    }
-
-    /**
-     * Check if the user has any of the given roles.
-     */
-    public function hasAnyRole(array $roles): bool
-    {
-        return $this->roles()->whereIn('name', $roles)->exists();
-    }
-
-    /**
-     * Check if the user has a specific permission.
-     */
-    public function hasPermission(string $permission): bool
-    {
-        return $this->permissions()->where('name', $permission)->exists() || 
-               $this->roles()->whereHas('permissions', function($q) use ($permission) {
-                   $q->where('name', $permission);
-               })->exists();
-    }
+    // Use built-in helpers: hasRole(), hasAnyRole(), hasAllRoles(), hasPermissionTo(), can()
 }

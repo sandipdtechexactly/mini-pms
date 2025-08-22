@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\ProjectController;
+use App\Http\Controllers\Api\TaskController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -35,6 +36,38 @@ Route::prefix('projects')->middleware(['auth:sanctum'])->group(function () {
     
     // Delete a project (admin/owner only)
     Route::delete('/{project}', [ProjectController::class, 'destroy']);
+});
+
+// Task routes
+Route::prefix('tasks')->middleware(['auth:sanctum'])->group(function () {
+    // Get all tasks (with search and filtering)
+    Route::get('/', [TaskController::class, 'index']);
+    
+    // Create a new task
+    Route::post('/', [TaskController::class, 'store']);
+    
+    // Get a specific task
+    Route::get('/{task}', [TaskController::class, 'show']);
+    
+    // Update a task
+    Route::put('/{task}', [TaskController::class, 'update']);
+    
+    // Delete a task
+    Route::delete('/{task}', [TaskController::class, 'destroy']);
+    
+    // Mark task as completed
+    Route::patch('/{task}/complete', [TaskController::class, 'markAsCompleted']);
+});
+
+// Authentication routes
+Route::prefix('auth')->group(function () {
+    Route::post('/register', [\App\Http\Controllers\Api\Auth\AuthController::class, 'register']);
+    Route::post('/login', [\App\Http\Controllers\Api\Auth\AuthController::class, 'login']);
+    
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::post('/logout', [\App\Http\Controllers\Api\Auth\AuthController::class, 'logout']);
+        Route::get('/user', [\App\Http\Controllers\Api\Auth\AuthController::class, 'user']);
+    });
 });
 
 // Include authentication routes

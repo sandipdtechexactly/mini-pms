@@ -23,11 +23,14 @@ class UpdateProjectRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'sometimes|string|max:255',
+            'name' => 'sometimes|string|max:255',
+            'code' => 'sometimes|string|max:50|unique:projects,code,' . $this->project->id,
             'description' => 'nullable|string',
             'status' => 'sometimes|in:planning,in_progress,on_hold,completed,cancelled',
+            'priority' => 'sometimes|in:low,medium,high,urgent',
             'start_date' => 'sometimes|date',
             'end_date' => 'sometimes|date|after:start_date',
+            'budget' => 'nullable|numeric|min:0',
             'team_members' => 'sometimes|array',
             'team_members.*' => 'exists:users,id',
         ];

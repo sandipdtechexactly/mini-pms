@@ -16,11 +16,14 @@ class ProjectResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'title' => $this->title,
+            'name' => $this->name,
+            'code' => $this->code,
             'description' => $this->description,
             'status' => $this->status,
+            'priority' => $this->priority,
             'start_date' => $this->start_date?->format('Y-m-d'),
             'end_date' => $this->end_date?->format('Y-m-d'),
+            'budget' => $this->budget,
             'owner' => new UserResource($this->whenLoaded('owner')),
             'team_members' => UserResource::collection($this->whenLoaded('teamMembers')),
             'tasks' => TaskResource::collection($this->whenLoaded('tasks')),

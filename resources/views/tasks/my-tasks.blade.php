@@ -22,7 +22,7 @@
                                     <th>Project</th>
                                     <th>Status</th>
                                     <th>Priority</th>
-                                    <th>Deadline</th>
+                                    <th>Due Date</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -30,19 +30,19 @@
                                 @forelse($tasks as $task)
                                     <tr>
                                         <td>{{ $task->title }}</td>
-                                        <td>{{ $task->project->title }}</td>
+                                        <td>{{ $task->project->name }}</td>
                                         <td>
                                             <span class="badge bg-{{ $task->status === 'completed' ? 'success' : ($task->status === 'in_progress' ? 'primary' : 'warning') }}">
                                                 {{ ucfirst(str_replace('_', ' ', $task->status)) }}
                                             </span>
                                         </td>
                                         <td>{{ ucfirst($task->priority) }}</td>
-                                        <td>{{ $task->deadline->format('M d, Y') }}</td>
+                                        <td>{{ optional($task->due_date)->format('M d, Y') }}</td>
                                         <td>
-                                            <a href="{{ route('tasks.show', $task) }}" class="btn btn-sm btn-info">
+                                            <a href="#" class="btn btn-sm btn-info" disabled>
                                                 <i class="fas fa-eye"></i>
                                             </a>
-                                            <a href="{{ route('tasks.edit', $task) }}" class="btn btn-sm btn-primary">
+                                            <a href="#" class="btn btn-sm btn-primary" disabled>
                                                 <i class="fas fa-edit"></i>
                                             </a>
                                         </td>

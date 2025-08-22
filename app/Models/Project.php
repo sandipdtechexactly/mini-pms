@@ -14,12 +14,15 @@ class Project extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'title',
+        'name',
+        'code',
         'description',
         'owner_id',
         'status',
+        'priority',
         'start_date',
         'end_date',
+        'budget',
     ];
 
     protected $casts = [

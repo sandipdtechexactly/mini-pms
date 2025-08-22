@@ -27,10 +27,10 @@ class ProjectController extends Controller
             $query->where('status', $request->status);
         }
 
-        // Search by title
+        // Search by name
         if ($request->has('search')) {
             $search = $request->search;
-            $query->where('title', 'like', "%{$search}%");
+            $query->where('name', 'like', "%{$search}%");
         }
 
         // If user is a developer, only show their projects

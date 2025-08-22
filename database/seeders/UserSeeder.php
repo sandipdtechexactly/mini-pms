@@ -15,10 +15,10 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        // Ensure roles exist first
-        $adminRole = Role::firstOrCreate(['name' => 'admin', 'guard_name' => 'web']);
-        $managerRole = Role::firstOrCreate(['name' => 'manager', 'guard_name' => 'web']);
-        $developerRole = Role::firstOrCreate(['name' => 'developer', 'guard_name' => 'web']);
+        // Ensure roles exist first (these should already be created by RolePermissionSeeder)
+        $adminRole = Role::where('name', 'admin')->first();
+        $managerRole = Role::where('name', 'manager')->first();
+        $developerRole = Role::where('name', 'developer')->first();
 
         // Create admin user
         $admin = User::firstOrNew(['email' => 'admin@example.com']);
@@ -30,7 +30,7 @@ class UserSeeder extends Seeder
                 'is_active' => true,
             ])->save();
         }
-        $admin->syncRoles([$adminRole->id]);
+        $admin->assignRole($adminRole);
 
         // Create manager users
         for ($i = 1; $i <= 3; $i++) {
@@ -43,7 +43,7 @@ class UserSeeder extends Seeder
                     'is_active' => true,
                 ])->save();
             }
-            $manager->syncRoles([$managerRole->id]);
+            $manager->assignRole($managerRole);
         }
 
         // Create developer users
@@ -57,7 +57,7 @@ class UserSeeder extends Seeder
                     'is_active' => true,
                 ])->save();
             }
-            $developer->syncRoles([$developerRole->id]);
+            $developer->assignRole($developerRole);
         }
 
         $this->command->info('Test users created successfully!');

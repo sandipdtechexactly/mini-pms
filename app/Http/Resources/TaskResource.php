@@ -20,13 +20,21 @@ class TaskResource extends JsonResource
             'description' => $this->description,
             'status' => $this->status,
             'priority' => $this->priority,
-            'deadline' => $this->deadline?->format('Y-m-d H:i:s'),
+            'due_date' => $this->due_date?->format('Y-m-d'),
+            'estimated_hours' => $this->estimated_hours,
             'project_id' => $this->project_id,
-            'assigned_to' => $this->whenLoaded('assignedTo', function () {
-                return new UserResource($this->assignedTo);
+            'assigned_to' => $this->whenLoaded('assignee', function () {
+                return new UserResource($this->assignee);
             }),
-            'created_by' => $this->whenLoaded('createdBy', function () {
-                return new UserResource($this->createdBy);
+            'created_by' => $this->whenLoaded('creator', function () {
+                return new UserResource($this->creator);
+            }),
+            'project' => $this->whenLoaded('project', function () {
+                return [
+                    'id' => $this->project->id,
+                    'name' => $this->project->name,
+                    'code' => $this->project->code,
+                ];
             }),
             'created_at' => $this->created_at?->toDateTimeString(),
             'updated_at' => $this->updated_at?->toDateTimeString(),

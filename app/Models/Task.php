@@ -16,9 +16,11 @@ class Task extends Model
         'description',
         'project_id',
         'assigned_to',
+        'created_by',
         'status',
         'priority',
         'due_date',
+        'estimated_hours',
         'completed_at',
     ];
 
@@ -69,10 +71,24 @@ class Task extends Model
     }
 
     /**
+     * Backwards-compatible relation names used by Blade/web controllers.
+     */
+    public function assignedTo(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'assigned_to');
+    }
+
+    public function createdBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    /**
      * Scope a query to only include tasks assigned to a specific user.
      */
-    public function scopeAssignedTo($query, $userId)
+    public function scopeAssignedTo($query, $userId = null)
     {
+        $userId = $userId ?? auth()->id();
         return $query->where('assigned_to', $userId);
     }
 
