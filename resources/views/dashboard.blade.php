@@ -136,4 +136,73 @@
     </div>
 </section>
 
+@php
+    $kanbanStatuses = [
+        'pending' => 'Pending',
+        'in_progress' => 'In Progress',
+        'in_review' => 'In Review',
+        'completed' => 'Completed',
+        'blocked' => 'Blocked',
+    ];
+    $kanbanTasks = (clone $taskQuery)
+        ->with('project')
+        ->latest()
+        ->limit(80)
+        ->get()
+        ->groupBy('status');
+@endphp
+
+<style>
+    .kanban { display:grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap:16px; }
+    .kanban-col { background:#ffffff; border-radius:12px; box-shadow: var(--shadow-lg); display:flex; flex-direction:column; }
+    .kanban-head { padding:12px; border-bottom:1px solid #e2e8f0; display:flex; align-items:center; justify-content:space-between; }
+    .kanban-title { font-weight:600; display:flex; gap:.4rem; align-items:center; }
+    .kanban-count { font-size:.75rem; background:#e2e8f0; padding:.2rem .5rem; border-radius:999px; }
+    .kanban-list { padding:12px; display:flex; flex-direction:column; gap:10px; max-height: 420px; overflow:auto; }
+    .kanban-card { border:1px solid #e5e7eb; border-radius:10px; padding:10px; background: linear-gradient(180deg,#fafafa,#f7fbff); display:flex; flex-direction:column; gap:6px; }
+    .kanban-card h4 { margin:0; font-size:.95rem; line-height:1.3; display:flex; gap:.4rem; align-items:center; }
+    .meta { display:flex; flex-wrap:wrap; gap:8px; font-size:.82rem; color:#64748b }
+    .tag { background:#eef2ff; color:#3730a3; border-radius:999px; padding:.15rem .5rem; }
+    .due { background:#fef3c7; color:#92400e; border-radius:999px; padding:.15rem .5rem; }
+    .done { background:#dcfce7; color:#166534; }
+    @media (max-width:768px) { .kanban-list { max-height:320px; } }
+</style>
+
+<section class="section">
+    <h2 style="display:flex;align-items:center;gap:.4rem"><i class="ri-columns-line"></i> Kanban (Read-only)</h2>
+    <div class="kanban">
+        @foreach($kanbanStatuses as $statusKey => $statusLabel)
+            @php
+                $cards = $kanbanTasks->get($statusKey, collect());
+            @endphp
+            <article class="kanban-col">
+                <div class="kanban-head">
+                    <div class="kanban-title">
+                        <i class="ri-checkbox-blank-circle-fill" style="font-size:.6rem; {{ $statusKey==='completed' ? 'color:#16a34a' : ($statusKey==='in_progress' ? 'color:#2563eb' : ($statusKey==='blocked' ? 'color:#ef4444' : 'color:#64748b')) }}"></i>
+                        {{ $statusLabel }}
+                    </div>
+                    <span class="kanban-count">{{ $cards->count() }}</span>
+                </div>
+                <div class="kanban-list">
+                    @forelse($cards->take(10) as $c)
+                        <div class="kanban-card">
+                            <h4><i class="ri-task-line"></i> {{ $c->title }}</h4>
+                            <div class="meta">
+                                <span class="tag"><i class="ri-folder-3-line"></i> {{ $c->project?->name ?? '—' }}</span>
+                                @if($c->status === 'completed')
+                                    <span class="tag done">Done</span>
+                                @else
+                                    <span class="due"><i class="ri-time-line"></i> {{ optional($c->due_date)->format('M d, Y') ?? 'No due' }}</span>
+                                @endif
+                            </div>
+                        </div>
+                    @empty
+                        <p class="muted" style="padding:8px">No tasks</p>
+                    @endforelse
+                </div>
+            </article>
+        @endforeach
+    </div>
+</section>
+
 @endsection
