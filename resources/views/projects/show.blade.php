@@ -39,11 +39,11 @@
                                 <div class="col-md-6">
                                     <p><strong>Duration:</strong> {{ $project->start_date->diffInDays($project->end_date) }} days</p>
                                     <p><strong>Days Remaining:</strong> 
-                                        @if(now()->lt($project->end_date))
-                                            {{ now()->diffInDays($project->end_date) }} days left
-                                        @else
-                                            Project ended {{ $project->end_date->diffForHumans() }}
-                                        @endif
+                                    @if(now()->lt($project->end_date))
+                                        {{ round(now()->diffInDays($project->end_date)) }} days left
+                                    @else
+                                        Project ended {{ $project->end_date->diffForHumans() }}
+                                    @endif
                                     </p>
                                     <p><strong>Progress:</strong>
                                         <div class="progress">
