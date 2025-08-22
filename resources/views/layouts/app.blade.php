@@ -21,11 +21,13 @@
                 border-radius: 12px;
                 overflow: hidden;
                 box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+                width: 100%;
             }
             table.premium thead th {
                 background: linear-gradient(135deg, #6366f1 0%, #22d3ee 100%);
                 color: #fff;
                 font-weight: 600;
+                white-space: nowrap;
             }
             table.premium tbody tr:hover {
                 background: linear-gradient(135deg, rgba(99,102,241,0.10) 0%, rgba(34,211,238,0.10) 100%);
@@ -42,6 +44,31 @@
             .badge-primary { background: #2563eb; color: #fff; }
             .badge-warning { background: #d97706; color: #fff; }
             .badge-secondary { background: #64748b; color: #fff; }
+
+            /* Global spacing & typography for better hierarchy */
+            :root {
+                --container-padding: clamp(12px, 2vw, 24px);
+                --radius-lg: 12px;
+                --shadow-lg: 0 10px 25px rgba(0,0,0,0.08);
+            }
+            body { font-size: clamp(14px, 1.1vw, 16px); line-height: 1.6; }
+            h1 { font-size: clamp(1.4rem, 2.6vw, 2rem); margin: .5rem 0 1rem; }
+            h2 { font-size: clamp(1.2rem, 2.2vw, 1.5rem); margin: .5rem 0 1rem; }
+            h3 { font-size: clamp(1.05rem, 1.8vw, 1.25rem); }
+            main.container { padding-inline: var(--container-padding); max-width: 1200px; margin-inline: auto; }
+
+            /* Table responsiveness */
+            .table-wrap { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+            table.premium.compact th, table.premium.compact td { padding: .65rem .8rem; }
+            table.premium.compact td { vertical-align: middle; }
+
+            /* Mobile-first adjustments */
+            @media (max-width: 768px) {
+                .btn-sm { font-size: .8rem; padding: .35rem .55rem; }
+                .icon { font-size: 1rem; }
+                table.premium.compact th, table.premium.compact td { padding: .55rem .65rem; }
+                table.premium thead th { position: sticky; top: 0; }
+            }
         </style>
         <!-- Optional: keep app assets if present -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])

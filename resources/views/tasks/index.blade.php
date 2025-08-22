@@ -7,7 +7,8 @@
     <article class="success">{{ session('status') }}</article>
 @endif
 
-<table role="grid" class="premium">
+<div class="table-wrap">
+<table role="grid" class="premium compact">
                             <thead>
                                 <tr>
                                     <th>Title</th>
@@ -37,6 +38,7 @@
                                 @endforelse
                             </tbody>
                         </table>
+</div>
 
 {{ $tasks->links() }}
 @endsection

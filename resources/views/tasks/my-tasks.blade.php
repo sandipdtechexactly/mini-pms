@@ -1,13 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
-<h1>My Tasks</h1>
+
 
 @if (session('status'))
     <article class="success">{{ session('status') }}</article>
 @endif
 
-<table role="grid" class="premium">
+<div class="table-wrap">
+<table role="grid" class="premium compact">
                             <thead>
                                 <tr>
                                     <th>Title</th>
@@ -33,6 +34,7 @@
                                 @endforelse
                             </tbody>
                         </table>
+</div>
 
 {{ $tasks->links() }}
 @endsection

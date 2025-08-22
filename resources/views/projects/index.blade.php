@@ -13,8 +13,8 @@
     @if($projects->isEmpty())
         <article>No projects found. Create your first project to get started.</article>
     @else
-        <div>
-            <table role="grid" class="premium">
+        <div class="table-wrap">
+            <table role="grid" class="premium compact">
                 <thead>
                     <tr>
                         <th>Name</th>
