@@ -1,21 +1,13 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header">{{ __('All Tasks') }}</div>
+<h1>All Tasks</h1>
 
-                <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
+@if (session('status'))
+    <article class="success">{{ session('status') }}</article>
+@endif
 
-                    <div class="table-responsive">
-                        <table class="table table-striped">
+<table role="grid">
                             <thead>
                                 <tr>
                                     <th>Title</th>
@@ -23,7 +15,7 @@
                                     <th>Assigned To</th>
                                     <th>Status</th>
                                     <th>Priority</th>
-                                    <th>Deadline</th>
+                                    <th>Due Date</th>
                                     
                                 </tr>
                             </thead>
@@ -32,11 +24,9 @@
                                     <tr>
                                         <td>{{ $task->title }}</td>
                                         <td>{{ $task->project->name }}</td>
-                                        <td>{{ $task->assignedTo->name }}</td>
+                                        <td>{{ $task->assignedTo?->name }}</td>
                                         <td>
-                                            <span class="badge bg-{{ $task->status === 'completed' ? 'success' : ($task->status === 'in_progress' ? 'primary' : 'warning') }}">
-                                                {{ ucfirst(str_replace('_', ' ', $task->status)) }}
-                                            </span>
+                                            {{ ucfirst(str_replace('_', ' ', $task->status)) }}
                                         </td>
                                         <td>{{ ucfirst($task->priority) }}</td>
                                         <td>{{ optional($task->due_date)->format('M d, Y') }}</td>
@@ -44,19 +34,11 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="6" class="text-center">No tasks found.</td>
+                                        <td colspan="6">No tasks found.</td>
                                     </tr>
                                 @endforelse
                             </tbody>
                         </table>
-                    </div>
 
-                    <div class="mt-4">
-                        {{ $tasks->links() }}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+{{ $tasks->links() }}
 @endsection

@@ -1,13 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>Projects</h1>
-        <a href="{{ route('projects.create') }}" class="btn btn-primary">
-            <i class="fas fa-plus"></i> New Project
-        </a>
-    </div>
+<h1>Projects</h1>
+<p><a href="{{ route('projects.create') }}" role="button">New Project</a></p>
 
     @if(session('success'))
         <div class="alert alert-success">
@@ -16,56 +11,37 @@
     @endif
 
     @if($projects->isEmpty())
-        <div class="card">
-            <div class="card-body text-center py-5">
-                <p class="text-muted mb-0">No projects found. Create your first project to get started.</p>
-            </div>
-        </div>
+        <article>No projects found. Create your first project to get started.</article>
     @else
-        <div class="table-responsive">
-            <table class="table table-hover">
-                <thead class="table-light">
+        <div>
+            <table role="grid">
+                <thead>
                     <tr>
-                        <th>Title</th>
+                        <th>Name</th>
+                        <th>Code</th>
                         <th>Status</th>
+                        <th>Priority</th>
                         <th>Start Date</th>
                         <th>End Date</th>
-                        <th>Actions</th>
+                        <th>Owner</th>
+                        <th>Members</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($projects as $project)
                         <tr>
                             <td>
-                                <a href="{{ route('projects.show', $project) }}">
-                                    {{ $project->title }}
-                                </a>
+                                <a href="{{ route('projects.show', $project) }}">{{ $project->name }}</a>
                             </td>
+                            <td>{{ $project->code }}</td>
                             <td>
-                                <span class="badge bg-{{ 
-                                    $project->status === 'completed' ? 'success' : 
-                                    ($project->status === 'in_progress' ? 'primary' : 
-                                    ($project->status === 'on_hold' ? 'warning' : 'secondary')) 
-                                }}">
-                                    {{ str_replace('_', ' ', ucfirst($project->status)) }}
-                                </span>
+                                {{ ucfirst(str_replace('_', ' ', $project->status)) }}
                             </td>
+                            <td>{{ ucfirst($project->priority) }}</td>
                             <td>{{ $project->start_date->format('M d, Y') }}</td>
                             <td>{{ $project->end_date->format('M d, Y') }}</td>
-                            <td>
-                                <div class="btn-group" role="group">
-                                    <a href="{{ route('projects.edit', $project) }}" class="btn btn-sm btn-outline-secondary">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    <form action="{{ route('projects.destroy', $project) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this project?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-outline-danger">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
-                                </div>
-                            </td>
+                            <td>{{ $project->owner?->name }}</td>
+                            <td>{{ $project->teamMembers->count() }}</td>
                         </tr>
                     @endforeach
                 </tbody>

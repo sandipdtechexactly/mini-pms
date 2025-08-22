@@ -11,21 +11,21 @@
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
-        <!-- Scripts -->
+        <!-- Minimal UI: Pico.css -->
+        <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@2/css/pico.min.css">
+        <!-- Optional: keep app assets if present -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100">
+        <div class="min-h-screen">
             @include('layouts.navigation')
 
-            <!-- Page Content -->
-            <main>
-                @if(isset($header))
-                    <header class="bg-white shadow">
-                        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                            {{ $header }}
-                        </div>
-                    </header>
+            <main class="container">
+                @if(session('success'))
+                    <article class="success">{{ session('success') }}</article>
+                @endif
+                @if(session('error'))
+                    <article class="contrast">{{ session('error') }}</article>
                 @endif
 
                 @if(isset($slot))
