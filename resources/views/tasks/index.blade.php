@@ -7,7 +7,7 @@
     <article class="success">{{ session('status') }}</article>
 @endif
 
-<table role="grid">
+<table role="grid" class="premium">
                             <thead>
                                 <tr>
                                     <th>Title</th>
@@ -25,9 +25,7 @@
                                         <td>{{ $task->title }}</td>
                                         <td>{{ $task->project->name }}</td>
                                         <td>{{ $task->assignedTo?->name }}</td>
-                                        <td>
-                                            {{ ucfirst(str_replace('_', ' ', $task->status)) }}
-                                        </td>
+                                        <td><span class="badge {{ $task->status === 'completed' ? 'badge-success' : ($task->status === 'in_progress' ? 'badge-primary' : 'badge-warning') }}">{{ ucfirst(str_replace('_', ' ', $task->status)) }}</span></td>
                                         <td>{{ ucfirst($task->priority) }}</td>
                                         <td>{{ optional($task->due_date)->format('M d, Y') }}</td>
                                         

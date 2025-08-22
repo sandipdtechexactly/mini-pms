@@ -2,7 +2,7 @@
 
 @section('content')
 <h1>Projects</h1>
-<p><a href="{{ route('projects.create') }}" role="button">New Project</a></p>
+<p><a href="{{ route('projects.create') }}" role="button" class="btn btn-sm btn-primary"><i class="ri-add-line icon"></i> New Project</a></p>
 
     @if(session('success'))
         <div class="alert alert-success">
@@ -14,7 +14,7 @@
         <article>No projects found. Create your first project to get started.</article>
     @else
         <div>
-            <table role="grid">
+            <table role="grid" class="premium">
                 <thead>
                     <tr>
                         <th>Name</th>
@@ -31,11 +31,11 @@
                     @foreach($projects as $project)
                         <tr>
                             <td>
-                                <a href="{{ route('projects.show', $project) }}">{{ $project->name }}</a>
+                                <a href="{{ route('projects.show', $project) }}"><i class="ri-folder-3-line icon"></i> {{ $project->name }}</a>
                             </td>
                             <td>{{ $project->code }}</td>
                             <td>
-                                {{ ucfirst(str_replace('_', ' ', $project->status)) }}
+                                <span class="badge {{ $project->status === 'completed' ? 'badge-success' : ($project->status === 'in_progress' ? 'badge-primary' : ($project->status === 'on_hold' ? 'badge-warning' : 'badge-secondary')) }}">{{ ucfirst(str_replace('_', ' ', $project->status)) }}</span>
                             </td>
                             <td>{{ ucfirst($project->priority) }}</td>
                             <td>{{ $project->start_date->format('M d, Y') }}</td>
