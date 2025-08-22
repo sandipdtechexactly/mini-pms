@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Api\Project;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class UpdateProjectRequest extends FormRequest
 {
@@ -11,7 +12,7 @@ class UpdateProjectRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return Auth::check() && Auth::user()->hasAnyRole(['admin', 'manager']);
     }
 
     /**
@@ -22,7 +23,13 @@ class UpdateProjectRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'title' => 'sometimes|string|max:255',
+            'description' => 'nullable|string',
+            'status' => 'sometimes|in:planning,in_progress,on_hold,completed,cancelled',
+            'start_date' => 'sometimes|date',
+            'end_date' => 'sometimes|date|after:start_date',
+            'team_members' => 'sometimes|array',
+            'team_members.*' => 'exists:users,id',
         ];
     }
 }

@@ -15,6 +15,16 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+                    
+                    @if(auth()->user()->hasRole('admin') || auth()->user()->hasRole('manager'))
+                        <x-nav-link :href="route('projects.index')" :active="request()->routeIs('projects.*')">
+                            {{ __('Projects') }}
+                        </x-nav-link>
+                    @endif
+                    
+                    <x-nav-link :href="auth()->user()->hasRole('developer') ? route('tasks.my') : route('tasks.index')" :active="request()->routeIs('tasks.*')">
+                        {{ auth()->user()->hasRole('developer') ? __('My Tasks') : __('Tasks') }}
+                    </x-nav-link>
                 </div>
             </div>
 
